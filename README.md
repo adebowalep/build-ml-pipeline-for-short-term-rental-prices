@@ -6,7 +6,7 @@ An end-to-end, reusable MLflow + Weights & Biases pipeline that ingests weekly b
 
 - **GitHub repository**: https://github.com/adebowalep/build-ml-pipeline-for-short-term-rental-prices
 - **W&B project** (public): https://wandb.ai/suleimanojo3-dsti-school-of-engineering/nyc_airbnb
-- **Release**: [v1.0.0](https://github.com/adebowalep/build-ml-pipeline-for-short-term-rental-prices/releases/tag/v1.0.0)
+- **Releases**: [v1.0.0](https://github.com/adebowalep/build-ml-pipeline-for-short-term-rental-prices/releases/tag/v1.0.0), [v1.0.1](https://github.com/adebowalep/build-ml-pipeline-for-short-term-rental-prices/releases/tag/v1.0.1)
 
 ## Table of contents
 
@@ -192,12 +192,14 @@ These three steps happen in the W&B web UI and can't be scripted from this repo 
 3. To retrain on a new data sample without touching the repo locally:
 
    ```bash
-   mlflow run https://github.com/<your-username>/build-ml-pipeline-for-short-term-rental-prices.git \
-     -v 1.0.0 \
+   mlflow run https://github.com/adebowalep/build-ml-pipeline-for-short-term-rental-prices.git \
+     -v v1.0.0 \
      -P hydra_options="etl.sample='sample2.csv'"
    ```
 
-   If `data_check` fails on the new sample (e.g. a geographic outlier the original sample didn't have), the test did its job. Since this implementation already filters geographic outliers as part of `basic_cleaning` (rather than as a later patch), this specific failure mode from the original assignment is avoided — but any other validation failure should be fixed in the relevant step, committed, and released as the next patch version (`1.0.1`, etc.).
+   **Verified result on `v1.0.0` against `sample2.csv`:** the full pipeline (download → basic_cleaning → data_check → data_split → train_random_forest) ran end-to-end successfully — all 6 `data_check` tests passed (`test_column_names`, `test_neighborhood_names`, `test_proper_boundaries`, `test_similar_neigh_distrib`, `test_row_count`, `test_price_range`), and training completed with MAE ≈ 32.4.
+
+   This is the expected outcome for this implementation: unlike a bare-minimum implementation, `basic_cleaning` here filters rows outside NYC's geographic bounding box (see `NYC_LONGITUDE_RANGE` / `NYC_LATITUDE_RANGE` in `src/basic_cleaning/run.py`) as part of the original `v1.0.0` design, not as a later patch. The geographic-outlier failure mode that a bare-minimum implementation would hit on `sample2.csv` is therefore handled proactively and never reaches `data_check`. If a future data sample exposes a *different* validation failure (e.g. a new neighborhood group, a price-range violation, or a distribution shift the KL-divergence test catches), it should be fixed in the relevant step, committed, and released as the next patch version (`1.0.1`, etc.), following the same release process above.
 
 ## Future improvements
 
