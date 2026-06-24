@@ -2,8 +2,15 @@
 
 An end-to-end, reusable MLflow + Weights & Biases pipeline that ingests weekly batches of NYC Airbnb listing data, cleans and validates it, trains a Random Forest price-estimation model, and exports a production-ready model artifact. The pipeline is designed to be re-run on every new data drop with a single command, with every step's parameters driven entirely by `config.yaml` (no hardcoded values) and every intermediate dataset and model tracked and versioned in W&B.
 
+## Submission links
+
+- **GitHub repository**: https://github.com/adebowalep/build-ml-pipeline-for-short-term-rental-prices
+- **W&B project** (public): https://wandb.ai/suleimanojo3-dsti-school-of-engineering/nyc_airbnb
+- **Release**: [v1.0.0](https://github.com/adebowalep/build-ml-pipeline-for-short-term-rental-prices/releases/tag/v1.0.0)
+
 ## Table of contents
 
+- [Submission links](#submission-links)
 - [Project overview](#project-overview)
 - [Architecture](#architecture)
 - [Pipeline flow](#pipeline-flow)
